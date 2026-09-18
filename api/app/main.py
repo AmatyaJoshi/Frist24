@@ -7,7 +7,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import create_engine, text
 
 from app.config import OUTBOUND_ALLOWLIST, get_settings
-from app.routers import products
+from app import scheduler
+from app.routers import products, sync
 
 log = logging.getLogger("frist24")
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
@@ -18,7 +19,9 @@ async def lifespan(app: FastAPI):
     s = get_settings()
     log.info("outbound allow-list: %s + ollama (%s)", ", ".join(OUTBOUND_ALLOWLIST), s.ollama_url)
     log.info("manufacturer: %s <%s>", s.frist24_manufacturer_name, s.frist24_manufacturer_contact)
+    scheduler.start()
     yield
+    scheduler.stop()
 
 
 app = FastAPI(
@@ -35,6 +38,7 @@ app.add_middleware(
 )
 
 app.include_router(products.router)
+app.include_router(sync.router)
 
 
 def _db_status() -> str:

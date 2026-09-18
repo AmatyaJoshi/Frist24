@@ -22,3 +22,8 @@ Format: `YYYY-MM-DD — step — decision — why`.
 - 2026-09-18 — step 4 — Re-uploading a byte-identical SBOM to the same product is a no-op (matched by sha256) so `make demo` is idempotent. Different bytes create a new SBOM row; components of all SBOMs of a product are matched (no "current SBOM" concept yet).
 - 2026-09-18 — step 4 — Single reviewer role: the `X-Actor` header names who acted (default "reviewer"). No auth in the prototype; documented as a limitation.
 - 2026-09-18 — step 4 — SPDX parser covered by a hand-written 3-package SPDX 2.3 document built from the real KEV-hit PURLs (no published SPDX SBOM with a KEV hit was found in time). Clearly labelled in fixtures/README.md; not used by the demo.
+- 2026-09-18 — step 5 — Sync order is KEV → OSV match → EPSS (KEV ∪ matched CVEs only, ~2.3k of 375k rows) → refresh flags → incident rule. One `run_full_sync` serves POST /sync, the 15-min APScheduler job and `make demo`; a process-level lock prevents overlapping runs.
+- 2026-09-18 — step 5 — OSV vulnerability details are cached in `vulnerabilities` keyed by OSV id and refetched only when `modified` changes; first demo run fetches ~650 records (~40s), later runs are seconds.
+- 2026-09-18 — step 5 — CVSS base score is computed from the OSV vector with the `cvss` library (OSV ships vectors, not scores); v3 preferred over v4 when both exist. NVD not called.
+- 2026-09-18 — step 5 — `aware_at` = time the incident row is created by the rule (first sync that sees the KEV match), not the KEV dateAdded. That is the moment the manufacturer "becomes aware" in the CRA sense; the KEV date is kept in exploitation_evidence.
+- 2026-09-18 — step 5 — Components without PURL are counted and surfaced but not matched (fuzzy/LLM path is cut-list item 5; stub only).

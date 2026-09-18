@@ -9,6 +9,7 @@ import sys
 import pytest
 from sqlalchemy import create_engine, text
 
+os.environ.setdefault("SYNC_ENABLED", "false")  # no background scheduler inside tests
 DB_URL = os.environ.get("DATABASE_URL")
 
 

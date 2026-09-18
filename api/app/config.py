@@ -27,6 +27,7 @@ class Settings(BaseSettings):
     epss_csv_url: str = "https://epss.cyentia.com/epss_scores-current.csv.gz"
     osv_api_url: str = "https://api.osv.dev/v1"
     sync_interval_minutes: int = 15
+    sync_enabled: bool = True
 
     cors_origins: str = "http://localhost:3000"
     fixtures_dir: str = "/fixtures"

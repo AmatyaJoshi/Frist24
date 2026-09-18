@@ -17,6 +17,7 @@ dependencies = [
   "cyclonedx-python-lib>=8.0",
   "spdx-tools>=0.8",
   "rapidfuzz>=3.9",
+  "cvss>=3.1",
   "packageurl-python>=0.15",
   "reportlab>=4.2",
   "pytest>=8.3",
