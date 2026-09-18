@@ -8,7 +8,7 @@ from sqlalchemy import create_engine, text
 
 from app.config import OUTBOUND_ALLOWLIST, get_settings
 from app import scheduler
-from app.routers import audit, incidents, products, reports, sync
+from app.routers import audit, draft, incidents, products, reports, sync
 
 log = logging.getLogger("frist24")
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
@@ -42,6 +42,7 @@ app.include_router(sync.router)
 app.include_router(incidents.router)
 app.include_router(reports.router)
 app.include_router(audit.router)
+app.include_router(draft.router)
 
 
 def _db_status() -> str:

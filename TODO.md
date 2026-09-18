@@ -5,3 +5,7 @@
 - [ ] EUVD (ENISA EU Vulnerability Database) as EU-native second exploitation source — stretch.
 - [ ] NVD enrichment (CVSS) — optional; OSV severity preferred.
 - [ ] Kubernetes manifests (kustomize) as optional deployment target for the Devpost "deployment" bonus. Not required by the brief; compose is the contract. Only after feature freeze.
+- [ ] German drafts from llama3.1:8b are usable but not native-quality ("Das betroffene Komponenten"); a larger or German-tuned model, or an EN→DE pass, would improve register. Human review covers it for now.
+- [ ] CPU-only inference takes ~2 min per draft (14-core laptop, no GPU). Fine for the demo video with a spinner; GPU or a smaller quant for live demos.
+- [ ] Review UI click-through (draft → edit → approve) verified via the API and type-checked; not yet exercised in a real browser on this machine (no browser automation available). Do a manual pass on a teammate's machine.
+- [ ] Final report prompt: currently reuses notification.md.
