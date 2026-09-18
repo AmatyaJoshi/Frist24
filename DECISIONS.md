@@ -19,3 +19,6 @@ Format: `YYYY-MM-DD — step — decision — why`.
 - 2026-09-18 — step 3 — Incident deadlines stored as columns (`deadline_early_warning`, `deadline_notification`, `deadline_final_report` + `final_report_anchor`) rather than computed on read, so the audit payload can carry the exact values shown to the reviewer.
 - 2026-09-18 — step 3 — API container runs `alembic upgrade head` before uvicorn (compose `command`) so a clean clone needs no manual migration step.
 - 2026-09-18 — step 3 — Local dev/test without Docker uses `pgserver` (embedded Postgres 16, pip-installable, no admin). `scripts/dev_pg.py` starts it; tests skip cleanly when DATABASE_URL is unreachable.
+- 2026-09-18 — step 4 — Re-uploading a byte-identical SBOM to the same product is a no-op (matched by sha256) so `make demo` is idempotent. Different bytes create a new SBOM row; components of all SBOMs of a product are matched (no "current SBOM" concept yet).
+- 2026-09-18 — step 4 — Single reviewer role: the `X-Actor` header names who acted (default "reviewer"). No auth in the prototype; documented as a limitation.
+- 2026-09-18 — step 4 — SPDX parser covered by a hand-written 3-package SPDX 2.3 document built from the real KEV-hit PURLs (no published SPDX SBOM with a KEV hit was found in time). Clearly labelled in fixtures/README.md; not used by the demo.

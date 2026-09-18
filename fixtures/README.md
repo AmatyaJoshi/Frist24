@@ -28,3 +28,8 @@ Regenerate the candidate lists any time (needs network, ~2 min):
 python scripts/find_fixtures.py --top 40
 python scripts/scan_public_sboms.py
 ```
+
+## SPDX format sample
+`sboms/spdx-sample.spdx.json` is a **hand-written 3-package SPDX 2.3 document** that exists only to
+exercise the SPDX parser. Its packages and PURLs are the real KEV-hit components from the two
+CycloneDX SBOMs above; it is not a published SBOM and is not used by `make demo`.

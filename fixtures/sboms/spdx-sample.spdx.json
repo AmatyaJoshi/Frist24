@@ -1,0 +1,43 @@
+{
+  "spdxVersion": "SPDX-2.3",
+  "dataLicense": "CC0-1.0",
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "name": "frist24-spdx-format-sample",
+  "documentNamespace": "https://frist24.example/spdx/sample-2026-09-18",
+  "creationInfo": {
+    "created": "2026-09-18T08:00:00Z",
+    "creators": ["Tool: frist24-fixtures-0.1"]
+  },
+  "packages": [
+    {
+      "name": "jquery",
+      "SPDXID": "SPDXRef-Package-jquery",
+      "versionInfo": "3.4.1",
+      "downloadLocation": "https://registry.npmjs.org/jquery/-/jquery-3.4.1.tgz",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {"referenceCategory": "PACKAGE-MANAGER", "referenceType": "purl", "referenceLocator": "pkg:npm/jquery@3.4.1"}
+      ]
+    },
+    {
+      "name": "spring-beans",
+      "SPDXID": "SPDXRef-Package-spring-beans",
+      "versionInfo": "5.0.9.RELEASE",
+      "downloadLocation": "https://repo1.maven.org/maven2/org/springframework/spring-beans/5.0.9.RELEASE/spring-beans-5.0.9.RELEASE.jar",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {"referenceCategory": "PACKAGE-MANAGER", "referenceType": "purl", "referenceLocator": "pkg:maven/org.springframework/spring-beans@5.0.9.RELEASE"}
+      ]
+    },
+    {
+      "name": "tomcat-embed-core",
+      "SPDXID": "SPDXRef-Package-tomcat-embed-core",
+      "versionInfo": "8.5.39",
+      "downloadLocation": "https://repo1.maven.org/maven2/org/apache/tomcat/embed/tomcat-embed-core/8.5.39/tomcat-embed-core-8.5.39.jar",
+      "filesAnalyzed": false,
+      "externalRefs": [
+        {"referenceCategory": "PACKAGE-MANAGER", "referenceType": "purl", "referenceLocator": "pkg:maven/org.apache.tomcat.embed/tomcat-embed-core@8.5.39"}
+      ]
+    }
+  ]
+}

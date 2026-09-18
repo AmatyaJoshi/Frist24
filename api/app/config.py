@@ -29,6 +29,7 @@ class Settings(BaseSettings):
     sync_interval_minutes: int = 15
 
     cors_origins: str = "http://localhost:3000"
+    fixtures_dir: str = "/fixtures"
 
 
 @lru_cache
