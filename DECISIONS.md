@@ -41,3 +41,5 @@ Format: `YYYY-MM-DD — step — decision — why`.
 - 2026-09-18 — step 8 — Local verification used a per-user Ollama 0.34.2 (zip, no admin) with llama3.1:8b on CPU (14 cores, 31 GB RAM); the compose stack uses the official image.
 - 2026-09-18 — step 9 — Review UI: approve is disabled while unsaved edits exist (save first) so the approved content always equals what the audit diff recorded. Draft selector shows every version; newest first.
 - 2026-09-18 — step 10 — Package = zip with manifest.json, facts.json, kev_entry.json, matched_components.json, reports/<stage>.<lang>.v<N>.{json,pdf}, audit_trail.json. Approved reports only when any exist, otherwise all drafts (clearly marked). Export is itself audited (`package.exported`).
+- 2026-09-18 — step 11 — `make demo` measured: ~45 s cold (first OSV detail fetch of ~650 records), ~21 s warm. Within the <60 s target on this network; the OSV detail cache is what makes re-runs fast.
+- 2026-09-18 — step 11 — Root page is a small dashboard (counts, soonest countdown, system status incl. model pulled?) so a cold start shows visibly when Ollama is still pulling.
