@@ -16,3 +16,4 @@ out/
 /exports/
 # large OSV response cache + generated candidate lists
 scripts/out/
+.pgdata/
