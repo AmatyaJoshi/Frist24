@@ -31,3 +31,7 @@ Format: `YYYY-MM-DD — step — decision — why`.
 - 2026-09-18 — step 6 — Approve re-checks every FACT field against the database at approval time and refuses (422) if any differs. Edits to FACT fields are refused earlier (422). The LLM therefore cannot smuggle a changed fact past the reviewer.
 - 2026-09-18 — step 6 — Template (non-LLM) drafts exist as a first-class `source=template` report so the review flow works without Ollama and as the step-8 fallback. TEXT fields are honest placeholders ("under investigation" / "wird untersucht").
 - 2026-09-18 — step 6 — Incident status advances on approval (open → early_warning_approved → notification_approved → final_approved → closed) and `next_deadline` follows the status; the list is sorted by next_deadline.
+- 2026-09-18 — step 7 — No shadcn/ui; plain Tailwind v4 utility classes plus a tiny `components/ui.tsx`. Saves the CLI setup and keeps the bundle small; the brief only *allows* shadcn.
+- 2026-09-18 — step 7 — Countdown renders `--:--:--` on the server and ticks after hydration to avoid hydration mismatches; colour thresholds: >6h green, 1–6h amber, <1h red, overdue red + label.
+- 2026-09-18 — step 7 — Pages are server components hitting the API over the compose network (`API_URL`), while client actions (upload, sync, approve) use `NEXT_PUBLIC_API_URL` from the browser. Both default to localhost:8000.
+- 2026-09-18 — step 7 — Times are displayed in Europe/Berlin (CE(S)T) because CRA deadlines are read by German/EU reviewers; stored and transmitted as UTC ISO.
