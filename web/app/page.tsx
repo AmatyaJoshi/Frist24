@@ -67,7 +67,7 @@ export default async function Home() {
 function Stat({ label, value, sub, href, accent = false }: { label: string; value: string; sub?: string; href: string; accent?: boolean }) {
   return (
     <Link href={href}>
-      <Card className="p-4 hover:bg-white/[0.04]">
+      <Card className="p-4 hover:bg-white/4">
         <div className="text-xs uppercase tracking-wide text-white/40">{label}</div>
         <div className={`text-3xl font-semibold tabular-nums ${accent ? "text-red-300" : ""}`}>{value}</div>
         {sub && <div className="text-xs text-white/40">{sub}</div>}

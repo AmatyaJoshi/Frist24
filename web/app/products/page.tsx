@@ -40,7 +40,7 @@ export default async function ProductsPage() {
             </thead>
             <tbody>
               {products.map((p) => (
-                <tr key={p.id} className="border-t border-white/5 hover:bg-white/[0.03]">
+                <tr key={p.id} className="border-t border-white/5 hover:bg-white/3">
                   <td className="px-4 py-3 font-mono">{p.sku}</td>
                   <td className="px-4 py-3">
                     <div className="font-medium">{p.name}</div>

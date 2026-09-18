@@ -72,7 +72,7 @@ function IncidentTable({ rows }: { rows: IncidentListItem[] }) {
         </thead>
         <tbody>
           {rows.map((i) => (
-            <tr key={i.id} className="border-t border-white/5 hover:bg-white/[0.03]">
+            <tr key={i.id} className="border-t border-white/5 hover:bg-white/3">
               <td className="px-4 py-3">
                 <Link href={`/incidents/${i.id}`} className="block">
                   <Countdown deadline={i.next_deadline} />

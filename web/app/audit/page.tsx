@@ -42,7 +42,7 @@ export default async function AuditPage() {
             </thead>
             <tbody>
               {items.map((e) => (
-                <tr key={e.id} className="border-t border-white/5 hover:bg-white/[0.03] align-top">
+                <tr key={e.id} className="border-t border-white/5 hover:bg-white/3 align-top">
                   <td className="px-4 py-2 font-mono text-white/40">{e.id}</td>
                   <td className="px-4 py-2 whitespace-nowrap text-white/70">{formatDateTime(e.ts)}</td>
                   <td className="px-4 py-2">{e.actor}</td>
