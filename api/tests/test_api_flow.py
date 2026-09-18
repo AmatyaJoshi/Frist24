@@ -90,3 +90,24 @@ def test_detail_template_edit_approve_audit(client):
     assert a["total"] >= v["rows"] - 1 and len(a["items"]) <= 5
     assert client.get("/sync/status").status_code == 200
     assert client.get("/openapi.json").status_code == 200
+
+
+def test_package_zip_contains_json_and_pdf(client):
+    incs = _ensure_incidents(client)
+    inc = next((i for i in incs if i["reports_approved"] > 0), incs[0])
+    r = client.get(f"/incidents/{inc['id']}/package")
+    assert r.status_code == 200 and r.headers["content-type"] == "application/zip"
+    import io
+    import zipfile
+
+    z = zipfile.ZipFile(io.BytesIO(r.content))
+    names = z.namelist()
+    assert "manifest.json" in names and "facts.json" in names and "audit_trail.json" in names
+    pdfs = [n for n in names if n.endswith(".pdf")]
+    jsons = [n for n in names if n.startswith("reports/") and n.endswith(".json")]
+    assert pdfs and jsons
+    assert z.read(pdfs[0])[:4] == b"%PDF"
+    import json
+
+    m = json.loads(z.read("manifest.json"))
+    assert m["incident"]["cve_id"] == inc["cve_id"]

@@ -3,7 +3,7 @@ from __future__ import annotations
 import uuid
 from datetime import UTC, datetime, timedelta
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session, selectinload
 
@@ -12,7 +12,7 @@ from app.models import AuditLog, Component, EpssScore, Incident, KevEntry, Match
 from app.routers.products import actor_from_header
 from app.schemas.incidents import FixAvailable, IncidentDetail, IncidentListItem, MatchedComponent, TimelineEvent
 from app.schemas.reports import ReportOut
-from app.services import audit, reports
+from app.services import audit, export, reports
 from app.services.facts import build_facts
 
 router = APIRouter(prefix="/incidents", tags=["incidents"])
@@ -202,3 +202,12 @@ def close_incident(incident_id: uuid.UUID, db: Session = Depends(get_db), actor:
     audit.append(db, actor, "incident.closed", "incident", inc.id, {})
     db.commit()
     return _list_items(db, [inc])[0]
+
+
+@router.get("/{incident_id}/package", summary="Filing package (zip: manifest, facts, reports JSON+PDF, audit trail)")
+def download_package(incident_id: uuid.UUID, db: Session = Depends(get_db), actor: str = Depends(actor_from_header)):
+    inc = _get(db, incident_id)
+    data, fname = export.build_package(db, inc)
+    audit.append(db, actor, "package.exported", "incident", inc.id, {"filename": fname, "bytes": len(data)})
+    db.commit()
+    return Response(content=data, media_type="application/zip", headers={"Content-Disposition": f'attachment; filename="{fname}"'})
