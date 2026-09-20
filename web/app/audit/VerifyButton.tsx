@@ -23,12 +23,12 @@ export default function VerifyButton() {
   return (
     <div className="flex items-center gap-3">
       {res && (
-        <span className={`text-sm ${res.ok ? "text-emerald-300" : "text-red-300"}`}>
+        <span className={`text-sm ${res.ok ? "text-ok" : "text-danger"}`}>
           {res.ok ? `✓ chain intact over ${res.rows} rows` : `✗ broken at row ${res.first_bad_id}: ${res.reason}`}
-          {res.head && <span className="ml-2 font-mono text-[10px] text-white/40" title={res.head}>head {res.head.slice(0, 12)}…</span>}
+          {res.head && <span className="ml-2 font-mono text-[10px] text-faint" title={res.head}>head {res.head.slice(0, 12)}…</span>}
         </span>
       )}
-      {err && <span className="text-sm text-red-300">{err}</span>}
+      {err && <span className="text-sm text-danger">{err}</span>}
       <button className={btnPrimary} onClick={go} disabled={busy}>{busy ? <><Spinner /> verifying…</> : "Verify chain"}</button>
     </div>
   );

@@ -29,7 +29,7 @@ export default async function AuditPage() {
       {items.length > 0 && (
         <Card>
           <table className="w-full text-sm">
-            <thead className="text-left text-xs uppercase tracking-wide text-white/40">
+            <thead className="text-left text-xs uppercase tracking-wide text-faint">
               <tr>
                 <th className="px-4 py-3">#</th>
                 <th className="px-4 py-3">When (CE(S)T)</th>
@@ -42,16 +42,16 @@ export default async function AuditPage() {
             </thead>
             <tbody>
               {items.map((e) => (
-                <tr key={e.id} className="border-t border-white/5 hover:bg-white/3 align-top">
-                  <td className="px-4 py-2 font-mono text-white/40">{e.id}</td>
-                  <td className="px-4 py-2 whitespace-nowrap text-white/70">{formatDateTime(e.ts)}</td>
+                <tr key={e.id} className="border-t border-border hover:bg-surface-2 align-top">
+                  <td className="px-4 py-2 font-mono text-faint">{e.id}</td>
+                  <td className="px-4 py-2 whitespace-nowrap text-muted">{formatDateTime(e.ts)}</td>
                   <td className="px-4 py-2">{e.actor}</td>
                   <td className="px-4 py-2 font-medium">{e.action}</td>
-                  <td className="px-4 py-2 text-xs text-white/60">{e.entity_type}{e.entity_id && <div className="font-mono text-white/30 truncate max-w-[10rem]" title={e.entity_id}>{e.entity_id}</div>}</td>
-                  <td className="px-4 py-2 text-xs text-white/60 max-w-md">
-                    <details><summary className="cursor-pointer truncate">{shortPayload(e.payload)}</summary><pre className="mt-1 whitespace-pre-wrap break-all text-[11px] text-white/50">{JSON.stringify(e.payload, null, 1)}</pre></details>
+                  <td className="px-4 py-2 text-xs text-muted">{e.entity_type}{e.entity_id && <div className="font-mono text-faint truncate max-w-[10rem]" title={e.entity_id}>{e.entity_id}</div>}</td>
+                  <td className="px-4 py-2 text-xs text-muted max-w-md">
+                    <details><summary className="cursor-pointer truncate">{shortPayload(e.payload)}</summary><pre className="mt-1 whitespace-pre-wrap break-all text-[11px] text-muted">{JSON.stringify(e.payload, null, 1)}</pre></details>
                   </td>
-                  <td className="px-4 py-2 font-mono text-[10px] text-white/40">
+                  <td className="px-4 py-2 font-mono text-[10px] text-faint">
                     <div title={e.hash}>hash {e.hash.slice(0, 12)}…</div>
                     <div title={e.prev_hash}>prev {e.prev_hash.slice(0, 12)}…</div>
                   </td>

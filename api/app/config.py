@@ -32,6 +32,10 @@ class Settings(BaseSettings):
     cors_origins: str = "http://localhost:3000"
     fixtures_dir: str = "/fixtures"
 
+    # Optional alerting: POST JSON to this URL when incidents open (Slack/Teams/PagerDuty/ticketing).
+    notify_webhook_url: str | None = None
+    public_web_url: str = "http://localhost:3000"
+
 
 @lru_cache
 def get_settings() -> Settings:

@@ -14,7 +14,7 @@ from sqlalchemy.orm import Session
 
 from app.db import session_factory
 from app.models import FeedSync, KevEntry
-from app.services import audit, feeds, incidents, matching
+from app.services import audit, feeds, incidents, matching, notify
 
 log = logging.getLogger("frist24.sync")
 _lock = threading.Lock()
@@ -57,8 +57,27 @@ def run_full_sync(actor: str = "system:scheduler") -> dict:
             # EPSS was loaded after matching: copy scores onto matches and refresh KEV flags.
             kev_matches = matching.refresh_kev_flags(db)
             summary["kev_matches"] = kev_matches
-            opened = _step(db, "incidents", lambda: {"opened": len(incidents.open_incidents(db, actor))})
+            new_incidents: list = []
+            opened = _step(db, "incidents", lambda: {"opened": len(new_incidents.extend(incidents.open_incidents(db, actor)) or new_incidents)})
             summary["incidents"] = opened
+            if new_incidents:
+                delivery = notify.send_incident_alert(
+                    [
+                        {
+                            "id": str(i.id),
+                            "sku": i.product.sku if i.product else None,
+                            "cve_id": i.cve_id,
+                            "vulnerability_name": i.kev.vulnerability_name if i.kev else None,
+                            "aware_at": i.aware_at.isoformat(),
+                            "deadline_early_warning": i.deadline_early_warning.isoformat(),
+                            "deadline_notification": i.deadline_notification.isoformat(),
+                        }
+                        for i in new_incidents
+                    ]
+                )
+                if delivery:
+                    summary["notification"] = delivery
+                    audit.append(db, actor, "notification.sent" if delivery["ok"] else "notification.failed", "system", None, delivery)
             audit.append(
                 db,
                 actor,

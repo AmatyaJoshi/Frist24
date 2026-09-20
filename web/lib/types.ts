@@ -237,3 +237,13 @@ export const STAGE_LABEL: Record<Stage, string> = {
   notification: "Vulnerability notification (72h)",
   final_report: "Final report (14d)",
 };
+
+export type Settings = {
+  version: string;
+  manufacturer: { name: string; contact: string };
+  llm: { url: string; model: string; fallback_model: string; ready: boolean; available_models: string[] };
+  feeds: { kev_url: string; epss_csv_url: string; osv_api_url: string };
+  sync: { interval_minutes: number; enabled: boolean };
+  outbound_allowlist: string[];
+  notifications: { webhook_configured: boolean; webhook_host: string | null };
+};

@@ -8,7 +8,7 @@ from sqlalchemy import create_engine, text
 
 from app.config import OUTBOUND_ALLOWLIST, get_settings
 from app import scheduler
-from app.routers import audit, draft, incidents, products, reports, sync
+from app.routers import audit, draft, incidents, products, reports, settings, sync
 
 log = logging.getLogger("frist24")
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
@@ -26,7 +26,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="Frist24 API",
-    version="0.1.0",
+    version="0.2.0",
     description="CRA Article 14 reporting assistant. Deterministic KEV rule opens incidents; a local LLM only drafts.",
     lifespan=lifespan,
 )
@@ -43,6 +43,7 @@ app.include_router(incidents.router)
 app.include_router(reports.router)
 app.include_router(audit.router)
 app.include_router(draft.router)
+app.include_router(settings.router)
 
 
 def _db_status() -> str:

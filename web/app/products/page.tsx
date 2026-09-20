@@ -27,7 +27,7 @@ export default async function ProductsPage() {
       {products.length > 0 && (
         <Card>
           <table className="w-full text-sm">
-            <thead className="text-left text-xs uppercase tracking-wide text-white/40">
+            <thead className="text-left text-xs uppercase tracking-wide text-faint">
               <tr>
                 <th className="px-4 py-3">SKU</th>
                 <th className="px-4 py-3">Product</th>
@@ -40,16 +40,16 @@ export default async function ProductsPage() {
             </thead>
             <tbody>
               {products.map((p) => (
-                <tr key={p.id} className="border-t border-white/5 hover:bg-white/3">
-                  <td className="px-4 py-3 font-mono">{p.sku}</td>
+                <tr key={p.id} className="border-t border-border hover:bg-surface-2">
+                  <td className="px-4 py-3 font-mono"><Link href={`/products/${p.id}`} className="text-accent hover:underline">{p.sku}</Link></td>
                   <td className="px-4 py-3">
                     <div className="font-medium">{p.name}</div>
-                    {p.description && <div className="text-xs text-white/40 max-w-md truncate">{p.description}</div>}
+                    {p.description && <div className="text-xs text-faint max-w-md truncate">{p.description}</div>}
                   </td>
                   <td className="px-4 py-3"><Badge value={p.lifecycle_status} /></td>
-                  <td className="px-4 py-3 text-white/60">{formatDate(p.placed_on_market_at)}</td>
-                  <td className="px-4 py-3 text-white/70">
-                    {p.sboms.length === 0 && <span className="text-white/30">none</span>}
+                  <td className="px-4 py-3 text-muted">{formatDate(p.placed_on_market_at)}</td>
+                  <td className="px-4 py-3 text-muted">
+                    {p.sboms.length === 0 && <span className="text-faint">none</span>}
                     {p.sboms.map((s) => (
                       <div key={s.id} className="text-xs" title={`sha256 ${s.sha256}`}>
                         <span className="font-mono">{s.format} {s.spec_version}</span> · {s.filename ?? "upload"} · {formatDateTime(s.uploaded_at)}
@@ -59,9 +59,9 @@ export default async function ProductsPage() {
                   <td className="px-4 py-3 text-right tabular-nums">{p.component_count}</td>
                   <td className="px-4 py-3 text-right tabular-nums">
                     {p.open_incidents > 0 ? (
-                      <Link href="/incidents" className="text-red-300 font-semibold hover:underline">{p.open_incidents}</Link>
+                      <Link href="/incidents" className="text-danger font-semibold hover:underline">{p.open_incidents}</Link>
                     ) : (
-                      <span className="text-white/30">0</span>
+                      <span className="text-faint">0</span>
                     )}
                   </td>
                 </tr>

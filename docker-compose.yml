@@ -57,6 +57,8 @@ services:
       FRIST24_MANUFACTURER_NAME: ${FRIST24_MANUFACTURER_NAME:-Beispiel Maschinenbau GmbH}
       FRIST24_MANUFACTURER_CONTACT: ${FRIST24_MANUFACTURER_CONTACT:-psirt@beispiel-maschinenbau.example}
       CORS_ORIGINS: http://localhost:3000
+      NOTIFY_WEBHOOK_URL: ${NOTIFY_WEBHOOK_URL:-}
+      PUBLIC_WEB_URL: ${PUBLIC_WEB_URL:-http://localhost:3000}
     volumes:
       - ./api:/code
       - ./fixtures:/fixtures:ro

@@ -34,6 +34,9 @@ spreadsheet. The 24-hour clock does not wait for the spreadsheet.
    from the UI.
 7. **Filing package** export (zip: JSON + PDF per report in EN and DE, facts, KEV entry, audit trail).
    The human submits it on the ENISA platform.
+8. **Alerts**: optional webhook (`NOTIFY_WEBHOOK_URL`) fires one JSON summary per sync when incidents open, so
+   the right person is paged at 16:00 on a Friday. A read-only **Settings** page shows the running configuration,
+   feed status, model status and the egress allow-list.
 
 No vulnerability data leaves the machine. Feed downloads are pulls of public data from an allow-list of hosts.
 
@@ -127,7 +130,7 @@ api/app/services/reports.py  edit (TEXT only) / approve (facts re-verified) / re
 api/app/services/audit.py    hash chain (sha256, advisory lock) + verify
 api/app/services/export.py   filing package (zip: JSON + PDF)
 api/prompts/                 early_warning.md (ew-v1), notification.md (nt-v1)
-web/app/                     / dashboard, /products, /incidents, /incidents/[id], /audit
+web/app/                     / dashboard, /products, /products/[id], /incidents (search + filters), /incidents/[id], /audit, /settings
 fixtures/                    real public SBOMs + provenance (fixtures/README.md)
 scripts/                     find_fixtures.py, scan_public_sboms.py, smoke.sh, dev_pg.py
 docs/                        brief: CONTEXT, DATA_SOURCES, REPORT_SCHEMA, BUILD_PLAN, DEVPOST
@@ -150,7 +153,7 @@ DECISIONS.md / TODO.md       non-obvious choices / cut scope
 `POST /sync`, `GET /sync/status` · `GET /incidents`, `GET /incidents/{id}`,
 `POST /incidents/{id}/reports/template`, `POST /incidents/{id}/fix-available`, `POST /incidents/{id}/close`,
 `GET /incidents/{id}/package` · `POST /draft/{stage}?incident_id&language`, `GET /draft/status` ·
-`GET/PATCH /reports/{id}`, `POST /reports/{id}/approve|reject` · `GET /audit`, `GET /audit/verify` · `GET /health`
+`GET/PATCH /reports/{id}`, `POST /reports/{id}/approve|reject` · `GET /audit`, `GET /audit/verify` · `GET /settings` · `GET /health`
 
 ## Data sources (all real, all public, all one-way)
 | Source | Used for | Refresh |
@@ -197,7 +200,12 @@ Outbound allow-list (logged at API start, asserted in code): `www.cisa.gov`, `ep
 - Personal data processed: reviewer names in the audit log (necessary for accountability under Art. 14) and
   the manufacturer contact address in reports. No end-user data.
 
+## UI
+Light theme by default, dark theme via the toggle in the header (remembered per browser). Semantic colour tokens,
+reduced-motion aware animations, FACT fields green and TEXT fields amber throughout.
+
 ## Roadmap
+See [docs/PRODUCT_ROADMAP.md](docs/PRODUCT_ROADMAP.md) for the full prototype-to-product list. Short version:
 EUVD as second exploitation source · fuzzy matching with LLM-assisted confirmation (still `needs_review`) ·
 dedicated final-report prompt · severe-incident flow · SSO/RBAC · production web build · optional Kubernetes
 manifests · notification when a new KEV entry hits an existing component (e-mail/webhook) · per-market

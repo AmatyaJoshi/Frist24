@@ -61,11 +61,11 @@ export default function ReviewPanel({ incident }: { incident: IncidentDetail }) 
       <Card className="p-4">
         <div className="flex flex-wrap items-center gap-2 mb-3">
           {STAGES.map((s) => (
-            <button key={s} onClick={() => { setStage(s); setSelectedId(null); setEdits({}); }} className={`${btnGhost} ${stage === s ? "bg-white/10 border-white/30" : ""}`}>{STAGE_LABEL[s]}</button>
+            <button key={s} onClick={() => { setStage(s); setSelectedId(null); setEdits({}); }} className={`${btnGhost} ${stage === s ? "bg-surface-3 border-border-strong" : ""}`}>{STAGE_LABEL[s]}</button>
           ))}
-          <span className="mx-1 text-white/20">|</span>
+          <span className="mx-1 text-faint">|</span>
           {(["en", "de"] as Language[]).map((l) => (
-            <button key={l} onClick={() => { setLang(l); setSelectedId(null); setEdits({}); }} className={`${btnGhost} uppercase ${lang === l ? "bg-white/10 border-white/30" : ""}`}>{l}</button>
+            <button key={l} onClick={() => { setLang(l); setSelectedId(null); setEdits({}); }} className={`${btnGhost} uppercase ${lang === l ? "bg-surface-3 border-border-strong" : ""}`}>{l}</button>
           ))}
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -74,33 +74,33 @@ export default function ReviewPanel({ incident }: { incident: IncidentDetail }) 
           </button>
           <button className={btnGhost} onClick={draftTemplate} disabled={!!busy}>{busy === "template" ? <Spinner /> : "Template draft (no LLM)"}</button>
           {candidates.length > 1 && (
-            <select className="ml-auto rounded border border-white/15 bg-black/30 px-2 py-1 text-xs" value={report?.id ?? ""} onChange={(e) => { setSelectedId(e.target.value); setEdits({}); }}>
+            <select className="ml-auto rounded border border-border bg-surface px-2 py-1 text-xs" value={report?.id ?? ""} onChange={(e) => { setSelectedId(e.target.value); setEdits({}); }}>
               {candidates.map((r) => <option key={r.id} value={r.id}>v{r.version} · {r.status} · {r.source}</option>)}
             </select>
           )}
         </div>
-        {msg && <div className={`mt-3 rounded border px-3 py-2 text-sm ${msg.ok ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-200" : "border-red-500/30 bg-red-500/10 text-red-200"}`}>{msg.text}</div>}
+        {msg && <div className={`mt-3 rounded border px-3 py-2 text-sm ${msg.ok ? "border-ok bg-ok-soft text-ok" : "border-danger bg-danger-soft text-danger"}`}>{msg.text}</div>}
       </Card>
 
       {!report && (
-        <Card className="p-8 text-center text-sm text-white/50">
+        <Card className="p-8 text-center text-sm text-muted">
           No {STAGE_LABEL[stage]} draft in {lang.toUpperCase()} yet. Draft one with the local model or start from the template.
-          <div className="mt-3 text-xs text-white/30">Every draft is <span className="text-amber-300">pending_review</span> until you approve it.</div>
+          <div className="mt-3 text-xs text-faint">Every draft is <span className="text-warn">pending_review</span> until you approve it.</div>
         </Card>
       )}
 
       {report && (
         <Card className="p-4">
-          <div className="flex flex-wrap items-center justify-between gap-2 mb-3 text-xs text-white/50">
+          <div className="flex flex-wrap items-center justify-between gap-2 mb-3 text-xs text-muted">
             <div className="flex items-center gap-2">
               <Badge value={report.status} />
-              <span>v{report.version} · source <span className="text-white/80">{report.source}</span>{report.model && <> · model <span className="font-mono text-white/80">{report.model}</span></>}{report.prompt_version && <> · prompt <span className="font-mono">{report.prompt_version}</span></>}</span>
+              <span>v{report.version} · source <span className="text-fg">{report.source}</span>{report.model && <> · model <span className="font-mono text-fg">{report.model}</span></>}{report.prompt_version && <> · prompt <span className="font-mono">{report.prompt_version}</span></>}</span>
             </div>
             <span>generated {formatDateTime(report.generated_at)}{report.reviewed_at && <> · reviewed by {report.reviewed_by} {formatDateTime(report.reviewed_at)}</>}</span>
           </div>
           <div className="flex gap-3 text-[11px] mb-3">
-            <span className="flex items-center gap-1"><i className="inline-block h-2.5 w-2.5 rounded-sm bg-emerald-400/70" /> FACT — from database, read-only</span>
-            <span className="flex items-center gap-1"><i className="inline-block h-2.5 w-2.5 rounded-sm bg-amber-400/70" /> TEXT — written by the model or template, edit freely</span>
+            <span className="flex items-center gap-1"><i className="inline-block h-2.5 w-2.5 rounded-sm bg-ok" /> FACT — from database, read-only</span>
+            <span className="flex items-center gap-1"><i className="inline-block h-2.5 w-2.5 rounded-sm bg-warn" /> TEXT — written by the model or template, edit freely</span>
           </div>
           <div className="space-y-3">
             {fields.map((k) => {
@@ -108,13 +108,13 @@ export default function ReviewPanel({ incident }: { incident: IncidentDetail }) 
               const fact = isFact(k);
               const current = edits[k] ?? (value == null ? "" : typeof value === "string" ? value : JSON.stringify(value));
               return (
-                <div key={k} className={`rounded border-l-4 pl-3 ${fact ? "border-emerald-400/70" : "border-amber-400/70"}`}>
-                  <div className="flex justify-between text-[11px] text-white/50"><span className="font-mono">{k}</span><span>{fact ? "FACT" : "TEXT"}</span></div>
+                <div key={k} className={`rounded border-l-4 pl-3 ${fact ? "border-ok" : "border-warn"}`}>
+                  <div className="flex justify-between text-[11px] text-muted"><span className="font-mono">{k}</span><span>{fact ? "FACT" : "TEXT"}</span></div>
                   {fact || !editable ? (
-                    <div className={`text-sm whitespace-pre-wrap ${fact ? "text-white/80" : "text-white"}`}>{String(value ?? "—")}</div>
+                    <div className={`text-sm whitespace-pre-wrap ${fact ? "text-fg" : "text-fg"}`}>{String(value ?? "—")}</div>
                   ) : (
                     <textarea
-                      className={`mt-1 w-full rounded border bg-black/30 px-2 py-1.5 text-sm ${edits[k] !== undefined ? "border-amber-400/60" : "border-white/10"}`}
+                      className={`mt-1 w-full rounded border bg-surface px-2 py-1.5 text-sm ${edits[k] !== undefined ? "border-warn" : "border-border"}`}
                       rows={Math.min(8, Math.max(2, Math.ceil(current.length / 90)))}
                       value={current}
                       onChange={(e) => setEdits((d) => ({ ...d, [k]: e.target.value }))}

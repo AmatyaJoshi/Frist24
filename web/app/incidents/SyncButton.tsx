@@ -24,7 +24,7 @@ export default function SyncButton() {
   }
   return (
     <div className="flex items-center gap-3">
-      {msg && <span className="text-xs text-white/50 max-w-xs truncate" title={msg}>{msg}</span>}
+      {msg && <span className="text-xs text-muted max-w-xs truncate" title={msg}>{msg}</span>}
       <button className={btnPrimary} onClick={go} disabled={busy}>
         {busy ? <><Spinner /> Syncing KEV · OSV · EPSS…</> : "Sync now"}
       </button>

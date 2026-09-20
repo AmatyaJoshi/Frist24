@@ -46,21 +46,21 @@ export default function UploadDrawer({ products }: { products: P[] }) {
       <button className={btnPrimary} onClick={() => setOpen(true)}>Upload SBOM</button>
       {open && (
         <div className="fixed inset-0 z-40 flex justify-end bg-black/60" onClick={() => setOpen(false)}>
-          <aside className="h-full w-full max-w-md overflow-y-auto border-l border-white/10 bg-[#0f151c] p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+          <aside className="h-full w-full max-w-md overflow-y-auto border-l border-border bg-surface p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold">{mode === "upload" ? "Upload SBOM" : "New product"}</h2>
-              <button className="text-white/50 hover:text-white" onClick={() => setOpen(false)}>✕</button>
+              <button className="text-muted hover:text-fg" onClick={() => setOpen(false)}>✕</button>
             </div>
             <div className="flex gap-2 mb-5 text-xs">
-              <button className={`${btnGhost} ${mode === "upload" ? "bg-white/10" : ""}`} onClick={() => setMode("upload")}>Upload to existing SKU</button>
-              <button className={`${btnGhost} ${mode === "create" ? "bg-white/10" : ""}`} onClick={() => setMode("create")}>Create product</button>
+              <button className={`${btnGhost} ${mode === "upload" ? "bg-surface-3" : ""}`} onClick={() => setMode("upload")}>Upload to existing SKU</button>
+              <button className={`${btnGhost} ${mode === "create" ? "bg-surface-3" : ""}`} onClick={() => setMode("create")}>Create product</button>
             </div>
 
             {mode === "upload" ? (
               <div className="space-y-4">
                 <label className="block text-sm">
-                  <span className="text-white/60">Product</span>
-                  <select className="mt-1 w-full rounded border border-white/15 bg-black/30 px-2 py-1.5" value={productId} onChange={(e) => setProductId(e.target.value)}>
+                  <span className="text-muted">Product</span>
+                  <select className="mt-1 w-full rounded border border-border bg-surface px-2 py-1.5" value={productId} onChange={(e) => setProductId(e.target.value)}>
                     {products.length === 0 && <option value="">— create a product first —</option>}
                     {products.map((p) => (
                       <option key={p.id} value={p.id}>{p.sku} — {p.name}</option>
@@ -68,25 +68,25 @@ export default function UploadDrawer({ products }: { products: P[] }) {
                   </select>
                 </label>
                 <label className="block text-sm">
-                  <span className="text-white/60">SBOM file (CycloneDX JSON 1.2–1.6 or SPDX JSON 2.2/2.3)</span>
+                  <span className="text-muted">SBOM file (CycloneDX JSON 1.2–1.6 or SPDX JSON 2.2/2.3)</span>
                   <input type="file" accept=".json,application/json" className="mt-1 block w-full text-sm" onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
                 </label>
-                <p className="text-xs text-white/40">The file is parsed on your own API container. Components are matched by PURL on the next sync (or press “Sync now” on the Incidents page).</p>
+                <p className="text-xs text-faint">The file is parsed on your own API container. Components are matched by PURL on the next sync (or press “Sync now” on the Incidents page).</p>
               </div>
             ) : (
               <div className="space-y-4">
                 <label className="block text-sm">
-                  <span className="text-white/60">SKU</span>
-                  <input className="mt-1 w-full rounded border border-white/15 bg-black/30 px-2 py-1.5 font-mono" value={sku} onChange={(e) => setSku(e.target.value)} placeholder="CTRL-9000" />
+                  <span className="text-muted">SKU</span>
+                  <input className="mt-1 w-full rounded border border-border bg-surface px-2 py-1.5 font-mono" value={sku} onChange={(e) => setSku(e.target.value)} placeholder="CTRL-9000" />
                 </label>
                 <label className="block text-sm">
-                  <span className="text-white/60">Name</span>
-                  <input className="mt-1 w-full rounded border border-white/15 bg-black/30 px-2 py-1.5" value={name} onChange={(e) => setName(e.target.value)} placeholder="CTRL-9000 Machine Controller" />
+                  <span className="text-muted">Name</span>
+                  <input className="mt-1 w-full rounded border border-border bg-surface px-2 py-1.5" value={name} onChange={(e) => setName(e.target.value)} placeholder="CTRL-9000 Machine Controller" />
                 </label>
               </div>
             )}
 
-            {msg && <div className={`mt-4 rounded border px-3 py-2 text-sm ${msg.ok ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-200" : "border-red-500/30 bg-red-500/10 text-red-200"}`}>{msg.text}</div>}
+            {msg && <div className={`mt-4 rounded border px-3 py-2 text-sm ${msg.ok ? "border-ok bg-ok-soft text-ok" : "border-danger bg-danger-soft text-danger"}`}>{msg.text}</div>}
 
             <div className="mt-6 flex gap-2">
               <button className={btnPrimary} disabled={busy || (mode === "upload" ? !file || !productId : !sku || !name)} onClick={submit}>

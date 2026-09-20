@@ -7,6 +7,7 @@ import type {
   IncidentListItem,
   Product,
   Report,
+  Settings,
 } from "./types";
 
 // Server components call the API over the compose network (API_URL);
@@ -85,6 +86,9 @@ export const approveReport = (id: string, note?: string) =>
   request<Report>(`/reports/${id}/approve`, { method: "POST", body: JSON.stringify({ note }) });
 export const rejectReport = (id: string, note?: string) =>
   request<Report>(`/reports/${id}/reject`, { method: "POST", body: JSON.stringify({ note }) });
+
+// --- settings
+export const getSettings = () => request<Settings>("/settings");
 
 // --- audit
 export const getAudit = (limit = 200, offset = 0) =>
