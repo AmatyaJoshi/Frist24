@@ -1,8 +1,11 @@
+import { HeaderSkeleton, StatSkeleton, TableSkeleton } from "@/components/Skeleton";
+
 export default function Loading() {
   return (
-    <div className="flex items-center gap-3 text-sm text-muted py-10">
-      <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-      Loading from the local API…
+    <div className="space-y-6">
+      <HeaderSkeleton action={false} />
+      <StatSkeleton />
+      <TableSkeleton rows={6} cols={4} header={false} />
     </div>
   );
 }
