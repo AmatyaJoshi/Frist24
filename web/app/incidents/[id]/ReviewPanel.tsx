@@ -84,8 +84,8 @@ export default function ReviewPanel({ incident }: { incident: IncidentDetail }) 
 
       {!report && (
         <Card className="p-8 text-center text-sm text-muted">
-          No {STAGE_LABEL[stage]} draft in {lang.toUpperCase()} yet. Draft one with the local model or start from the template.
-          <div className="mt-3 text-xs text-faint">Every draft is <span className="text-warn">pending_review</span> until you approve it.</div>
+          No {STAGE_LABEL[stage]} draft in {lang.toUpperCase()} yet.
+          <div className="mt-3 text-xs text-faint">Drafts start as <span className="text-warn">pending_review</span>.</div>
         </Card>
       )}
 
@@ -99,8 +99,8 @@ export default function ReviewPanel({ incident }: { incident: IncidentDetail }) 
             <span>generated {formatDateTime(report.generated_at)}{report.reviewed_at && <> · reviewed by {report.reviewed_by} {formatDateTime(report.reviewed_at)}</>}</span>
           </div>
           <div className="flex gap-3 text-[11px] mb-3">
-            <span className="flex items-center gap-1"><i className="inline-block h-2.5 w-2.5 rounded-sm bg-ok" /> FACT — from database, read-only</span>
-            <span className="flex items-center gap-1"><i className="inline-block h-2.5 w-2.5 rounded-sm bg-warn" /> TEXT — written by the model or template, edit freely</span>
+            <span className="flex items-center gap-1"><i className="inline-block h-2.5 w-2.5 rounded-sm bg-ok" /> FACT · database, read-only</span>
+            <span className="flex items-center gap-1"><i className="inline-block h-2.5 w-2.5 rounded-sm bg-warn" /> TEXT · model or template, editable</span>
           </div>
           <div className="space-y-3">
             {fields.map((k) => {

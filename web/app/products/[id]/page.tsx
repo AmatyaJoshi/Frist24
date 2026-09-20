@@ -70,7 +70,7 @@ export default async function ProductPage({ params, searchParams }: { params: Pr
         </Card>
       </div>
 
-      <Card className="overflow-hidden">
+      <Card className="overflow-x-auto">
         <div className="flex flex-wrap items-center gap-3 border-b border-border px-4 py-3">
           <SectionTitle>Components</SectionTitle>
           <form className="flex items-center gap-2" action={`/products/${id}`}>

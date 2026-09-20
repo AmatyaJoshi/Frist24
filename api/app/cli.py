@@ -2,7 +2,7 @@
 
   migrate   run alembic upgrade head
   seed      insert the two demo products (idempotent) + audit event
-  demo      seed + upload fixture SBOMs + sync feeds + open incidents  (steps 4-5 fill this in)
+  demo      seed + fixture SBOMs + feed sync + incidents (+ staged multi-year history; --no-history to skip)
   reset     drop demo data (products cascade; keeps feeds and the audit log)
 """
 from __future__ import annotations
@@ -69,15 +69,11 @@ def reset(actor: str = "system:reset") -> None:
         log.info("deleted %d products (cascade)", n)
 
 
-def demo() -> None:
+def demo(with_history: bool = True) -> None:
     seed()
-    # steps 4-5 add: ingest fixture SBOMs, sync feeds, open incidents
-    try:
-        from app.services.demo import run_demo  # type: ignore
+    from app.services.demo import run_demo
 
-        run_demo()
-    except ImportError:
-        log.warning("demo pipeline not implemented yet (build step 5)")
+    run_demo(with_history=with_history)
 
 
 def main(argv: list[str]) -> int:
@@ -91,7 +87,9 @@ def main(argv: list[str]) -> int:
         reset()
     elif cmd == "demo":
         migrate()
-        demo()
+        import os
+
+        demo(with_history="--no-history" not in argv and os.environ.get("DEMO_HISTORY", "true").lower() != "false")
     else:
         print(__doc__)
         return 1

@@ -10,3 +10,4 @@
 - [ ] Review UI click-through (draft → edit → approve) verified via the API and type-checked; not yet exercised in a real browser on this machine (no browser automation available). Do a manual pass on a teammate's machine.
 - [ ] Final report prompt: currently reuses notification.md.
 - [ ] Observed hallucination in a TEXT field: llama3.1:8b described CVE-2020-11023 (XSS) as "potential for remote code execution" in `severity_assessment`. FACTs were intact. Reviewer must catch this; consider a post-check that flags severity words not present in the CVE text.
+- [ ] History seed (`services/history.py`) written without a database on this machine; verify on the Docker laptop: `docker compose exec api python -m app.cli demo` should log "demo history staged for 5 incident(s)" and /incidents should show closed 2022–2023 incidents plus the two live ones.

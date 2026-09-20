@@ -39,13 +39,16 @@ def compute_hash(prev_hash: str, ts: datetime, actor: str, action: str, entity_t
     return hashlib.sha256((prev_hash + _canonical(ts, actor, action, entity_type, entity_id, payload)).encode("utf-8")).hexdigest()
 
 
-def append(db: Session, actor: str, action: str, entity_type: str, entity_id: Any = None, payload: dict | None = None) -> AuditLog:
-    """Append one row inside the caller's transaction. Caller commits."""
+def append(db: Session, actor: str, action: str, entity_type: str, entity_id: Any = None, payload: dict | None = None, ts: datetime | None = None) -> AuditLog:
+    """Append one row inside the caller's transaction. Caller commits.
+
+    `ts` defaults to now; the demo history seed passes staged timestamps (flagged in payload).
+    The chain hashes whatever ts is stored, so verification stays intact."""
     payload = payload or {}
     db.execute(text("SELECT pg_advisory_xact_lock(:k)"), {"k": _LOCK_KEY})
     last = db.execute(select(AuditLog.hash).order_by(AuditLog.id.desc()).limit(1)).scalar_one_or_none()
     prev = last or GENESIS
-    ts = datetime.now(UTC)
+    ts = ts or datetime.now(UTC)
     eid = str(entity_id) if entity_id is not None else None
     row = AuditLog(
         ts=ts,

@@ -51,7 +51,7 @@ export default function IncidentTable({ rows }: { rows: IncidentListItem[] }) {
       {filtered.length === 0 ? (
         <Empty title="No incidents match" hint="Adjust the search or status filter." />
       ) : (
-        <Card className="overflow-hidden">
+        <Card className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="text-left text-[11px] uppercase">
               <tr>

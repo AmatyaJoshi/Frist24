@@ -43,11 +43,17 @@ def ingest_fixtures(actor: str = "system:demo") -> int:
     return n
 
 
-def run_demo() -> None:
+def run_demo(with_history: bool = True) -> None:
     ingest_fixtures()
-    try:
-        from app.services.sync import run_full_sync  # step 5
-    except ImportError:
-        log.warning("feed sync not implemented yet (build step 5)")
-        return
+    if with_history:
+        from app.services.history import seed_history_products
+
+        seed_history_products()
+    from app.services.sync import run_full_sync
+
     run_full_sync(actor="system:demo")
+    if with_history:
+        from app.services.history import stage_history
+
+        n = stage_history()
+        log.info("demo history staged for %d incident(s)", n)

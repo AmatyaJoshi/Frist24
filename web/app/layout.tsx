@@ -9,8 +9,7 @@ export const metadata: Metadata = {
   description: "Local-first, deterministic, auditable CRA Article 14 reporting assistant",
 };
 
-// Applied before hydration so the stored theme never flashes.
-const themeInit = `try{var t=localStorage.getItem("frist24-theme");if(t==="dark"||(t===null&&window.matchMedia("(prefers-color-scheme: dark)").matches&&false)){document.documentElement.dataset.theme="dark"}}catch(e){}`;
+const themeInit = `try{if(localStorage.getItem("frist24-theme")==="dark"){document.documentElement.dataset.theme="dark"}}catch(e){}`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -18,24 +17,25 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
       </head>
-      <body className="min-h-screen antialiased">
-        <header className="sticky top-0 z-30 border-b border-border bg-surface/90 backdrop-blur">
-          <div className="mx-auto flex h-14 max-w-7xl items-center gap-6 px-6">
-            <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight">
-              <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-accent text-white text-xs font-bold">24</span>
-              <span>Frist<span className="text-accent">24</span></span>
+      <body className="flex min-h-screen flex-col antialiased">
+        <header className="sticky top-0 z-30 border-b border-border bg-surface/85 backdrop-blur">
+          <div className="mx-auto flex h-14 max-w-7xl items-center gap-4 px-4 md:px-6">
+            <Link href="/" className="shrink-0 text-2xl font-extrabold tracking-tighter">
+              Frist<span className="text-accent">24</span>
             </Link>
             <Nav />
             <div className="ml-auto flex items-center gap-3">
-              <span className="hidden md:inline text-xs text-faint">local-first · no vulnerability data leaves this machine</span>
+              <span className="hidden lg:inline text-xs text-faint">local-first · nothing leaves this machine</span>
               <ThemeToggle />
             </div>
           </div>
         </header>
-        <main className="mx-auto max-w-7xl px-6 py-8 anim-fade-up">{children}</main>
-        <footer className="mx-auto max-w-7xl px-6 py-8 text-xs text-faint border-t border-border mt-8">
-          Frist24 · Regulation (EU) 2024/2847 Art. 14 · Deterministic first, LLM second, human always. Report schemas are the manufacturer&apos;s working
-          interpretation, not the official ENISA form.
+        <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 md:px-6 md:py-8 anim-fade-up">{children}</main>
+        <footer className="border-t border-border">
+          <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-2 px-4 py-4 text-xs text-faint md:px-6">
+            <span>Frist24 · Regulation (EU) 2024/2847 Art. 14</span>
+            <span>Deterministic first · LLM second · human always</span>
+          </div>
         </footer>
       </body>
     </html>

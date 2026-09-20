@@ -21,13 +21,13 @@ export default async function AuditPage() {
     <div>
       <PageHeader
         title="Audit log"
-        subtitle={<>Append-only (database trigger) and hash-chained: each row&apos;s hash covers its content plus the previous hash. {total} rows.</>}
+        subtitle={<>Append-only and hash-chained. {total} rows.</>}
         actions={<VerifyButton />}
       />
       {error && <ErrorBox message={`API unreachable: ${error}`} />}
       {!error && items.length === 0 && <Empty title="Empty audit log" />}
       {items.length > 0 && (
-        <Card>
+        <Card className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="text-left text-xs uppercase tracking-wide text-faint">
               <tr>

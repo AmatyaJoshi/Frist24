@@ -24,7 +24,7 @@ export default async function IncidentsPage() {
         title="Incidents"
         subtitle={
           <>
-            One incident is one product and one CVE listed in CISA KEV. Opened by rule, never by the model. Clocks start at <span className="font-mono">aware_at</span>.
+            One product, one KEV-listed CVE. Opened by rule; clocks start at aware_at.
             {lastKev && (
               <span className="ml-2 text-faint">
                 Last KEV sync {formatDateTime(lastKev.finished_at)} <Badge value={lastKev.status} className="ml-1" />

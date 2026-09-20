@@ -33,3 +33,15 @@ python scripts/scan_public_sboms.py
 `sboms/spdx-sample.spdx.json` is a **hand-written 3-package SPDX 2.3 document** that exists only to
 exercise the SPDX parser. Its packages and PURLs are the real KEV-hit components from the two
 CycloneDX SBOMs above; it is not a published SBOM and is not used by `make demo`.
+
+## History products (added 2026-09-20)
+Also unmodified CycloneDX 1.2 files from CycloneDX/bom-examples, used by `make demo` to give the demo a
+multi-year incident history. SBOMs, components, CVEs and KEV entries are real; the workflow timestamps and
+approvals for the listed incidents are staged by `api/app/services/history.py` and flagged `synthetic_history`
+in the audit log.
+
+| Demo SKU | File | Source SBOM | Components | KEV hit |
+|---|---|---|---|---|
+| `SCC-3300` SCADA connector | `sboms/scada-connector.cdx.json` | `SBOM/dropwizard-1.3.15/bom.json` | 167 | jetty http2-server 9.4.18 → CVE-2023-44487 |
+| `FLA-210` fleet agent | `sboms/fleet-agent.cdx.json` | `SBOM/proton-bridge/proton-bridge-v1.8.0.bom.json` | 201 | golang.org/x/net → CVE-2023-44487 |
+| `WP-500` web portal | `sboms/web-portal.cdx.json` | `SBOM/juice-shop/v11.1.2/bom.json` | 840 | none (clean product) |

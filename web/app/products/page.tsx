@@ -19,13 +19,13 @@ export default async function ProductsPage() {
     <div>
       <PageHeader
         title="Products"
-        subtitle="Products with digital elements you place on the EU market. Upload a CycloneDX or SPDX SBOM per SKU; components are matched against OSV, KEV and EPSS on every sync."
+        subtitle="One row per SKU. Upload a CycloneDX or SPDX SBOM; components are matched on every sync."
         actions={<UploadDrawer products={products.map((p) => ({ id: p.id, sku: p.sku, name: p.name }))} />}
       />
       {error && <ErrorBox message={`API unreachable: ${error}`} />}
       {!error && products.length === 0 && <Empty title="No products yet" hint={<>Run <code>make demo</code> to seed two SKUs with real public SBOMs, or add a product above.</>} />}
       {products.length > 0 && (
-        <Card>
+        <Card className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="text-left text-xs uppercase tracking-wide text-faint">
               <tr>

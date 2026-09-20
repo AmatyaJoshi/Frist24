@@ -14,13 +14,19 @@ export default async function SettingsPage() {
   } catch (e) {
     error = e instanceof Error ? e.message : String(e);
   }
-  if (error || !s) return <ErrorBox message={`API unreachable: ${error ?? "no settings"}`} />;
+  if (error || !s)
+    return (
+      <div className="space-y-3">
+        <PageHeader title="Settings" />
+        <ErrorBox message={error?.includes("Not Found") ? "The running API is older than this UI and has no /settings endpoint yet. Rebuild the api container (docker compose up -d --build)." : `API unreachable: ${error ?? "no settings"}`} />
+      </div>
+    );
 
   return (
     <div>
       <PageHeader
         title="Settings"
-        subtitle="Read-only view of the running configuration. Values come from environment variables (.env); change them there and restart the API."
+        subtitle="Running configuration, read-only. Change values in .env and restart the API."
       />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 stagger">
         <Card className="p-4 text-sm space-y-2">

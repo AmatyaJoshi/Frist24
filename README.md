@@ -169,8 +169,12 @@ Outbound allow-list (logged at API start, asserted in code): `www.cisa.gov`, `ep
 ## Real vs. simulated
 - **Real:** KEV catalog (1,713 entries on 2026-09-18), EPSS scores, OSV matches (644 vulnerability records
   for 1,786 distinct PURLs), the SBOMs (unmodified public CycloneDX files), the LLM drafts.
-- **Simulated:** the manufacturer identity (`FRIST24_MANUFACTURER_NAME`) and the claim that the two demo SKUs
-  embed those SBOMs (they are SBOMs of Proton Mail's web client and Keycloak 10.0.2, see `fixtures/README.md`).
+- **Simulated:** the manufacturer identity (`FRIST24_MANUFACTURER_NAME`), the claim that the five demo SKUs embed
+  those SBOMs (they are public SBOMs of Proton Mail's web client, Keycloak 10.0.2, Dropwizard 1.3.15, Proton Bridge
+  1.8.0 and OWASP Juice Shop, see `fixtures/README.md`), and the **workflow history**: `make demo` back-dates five
+  incidents to the day after their CVE entered KEV and approves template reports under demo reviewer names. Those
+  rows are flagged `synthetic_history: true` in the audit log and carry actor `demo:history`. Disable with
+  `DEMO_HISTORY=false` or `python -m app.cli demo --no-history`. The two live incidents are untouched.
 
 ## Limitations (honest list)
 - **No submission to ENISA.** The single reporting platform has no public API; we export a filing-ready package.

@@ -6,6 +6,7 @@ import { Badge, Card, ErrorBox } from "@/components/ui";
 import Countdown from "@/components/Countdown";
 import ReviewPanel from "./ReviewPanel";
 import Timeline from "./Timeline";
+import Stepper from "@/components/Stepper";
 import type { IncidentDetail } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -31,14 +32,16 @@ export default async function IncidentPage({ params }: { params: Promise<{ id: s
           <div className="text-sm text-muted mt-1">{inc.vulnerability_name}</div>
           <div className="mt-2 flex items-center gap-2"><Badge value={inc.status} /><span className="text-xs text-faint">aware_at {formatDateTime(inc.aware_at)}</span></div>
         </div>
-        <Card className="p-4 grid grid-cols-3 gap-6 text-center">
+        <Card className="grid w-full grid-cols-1 gap-4 p-4 text-center sm:grid-cols-3 sm:gap-6 xl:w-auto">
           <Deadline label="Early warning · 24h" deadline={inc.deadline_early_warning} done={inc.status !== "open"} />
           <Deadline label="Notification · 72h" deadline={inc.deadline_notification} done={["notification_approved", "final_approved", "closed"].includes(inc.status)} />
           <Deadline label={`Final report · 14d${inc.final_report_anchor === "provisional" ? " (provisional)" : ""}`} deadline={inc.deadline_final_report} done={["final_approved", "closed"].includes(inc.status)} />
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)_minmax(0,0.9fr)] gap-6">
+      <Card className="px-4 py-3"><Stepper status={inc.status} /></Card>
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)_minmax(0,0.9fr)]">
         {/* Column 1: deterministic facts */}
         <div className="space-y-4">
           <Card className="p-4 space-y-3 text-sm">
