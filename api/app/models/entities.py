@@ -222,3 +222,13 @@ class FeedSync(Base):
     status: Mapped[str] = mapped_column(String(16), nullable=False, default="running")  # running | ok | error
     items: Mapped[int | None] = mapped_column(Integer)
     message: Mapped[str | None] = mapped_column(Text)
+
+
+class AppSetting(Base):
+    """Operator-editable settings (key/value), layered over environment defaults. See services/app_settings.py."""
+
+    __tablename__ = "app_settings"
+    key: Mapped[str] = mapped_column(String(64), primary_key=True)
+    value: Mapped[object] = mapped_column(JSONType, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    updated_by: Mapped[str | None] = mapped_column(String(120))

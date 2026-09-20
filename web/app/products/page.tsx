@@ -32,10 +32,10 @@ export default async function ProductsPage() {
                 <th className="px-4 py-3">SKU</th>
                 <th className="px-4 py-3">Product</th>
                 <th className="px-4 py-3">Lifecycle</th>
-                <th className="px-4 py-3">On market</th>
+                <th className="px-4 py-3">On Market</th>
                 <th className="px-4 py-3">SBOMs</th>
                 <th className="px-4 py-3 text-right">Components</th>
-                <th className="px-4 py-3 text-right">Open incidents</th>
+                <th className="px-4 py-3 text-right">Open Incidents</th>
               </tr>
             </thead>
             <tbody>

@@ -40,13 +40,20 @@ def _summary_text(incidents: list[dict]) -> str:
 
 def send_incident_alert(incidents: list[dict]) -> dict | None:
     """Returns delivery metadata, or None when no webhook is configured or nothing to send."""
-    s = get_settings()
-    if not s.notify_webhook_url or not incidents:
-        return None
-    payload = build_payload(incidents, s.public_web_url)
-    host = urlparse(s.notify_webhook_url).hostname
     try:
-        r = httpx.post(s.notify_webhook_url, json=payload, timeout=10)
+        from app.services.app_settings import load_standalone
+
+        cfg = load_standalone()
+        webhook, public = cfg.notify_webhook_url, cfg.public_web_url
+    except Exception:  # noqa: BLE001  (no DB in unit tests)
+        s = get_settings()
+        webhook, public = s.notify_webhook_url, s.public_web_url
+    if not webhook or not incidents:
+        return None
+    payload = build_payload(incidents, public)
+    host = urlparse(webhook).hostname
+    try:
+        r = httpx.post(webhook, json=payload, timeout=10)
         ok = r.status_code < 300
         log.info("webhook %s -> %s (%d incidents)", host, r.status_code, len(incidents))
         return {"host": host, "status_code": r.status_code, "ok": ok, "count": len(incidents)}

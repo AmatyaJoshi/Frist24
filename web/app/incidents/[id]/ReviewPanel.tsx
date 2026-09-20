@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
-import { approveReport, createTemplateDraft, draftWithLlm, editReport, packageUrl, rejectReport } from "@/lib/api";
+import { approveReport, createTemplateDraft, draftStatus, draftWithLlm, editReport, packageUrl, rejectReport } from "@/lib/api";
 import { Badge, Card, btnDanger, btnGhost, btnPrimary, btnSuccess } from "@/components/ui";
 import { formatDateTime } from "@/lib/time";
 import { STAGE_FIELDS, STAGE_LABEL, type IncidentDetail, type Language, type Report, type Stage } from "@/lib/types";
@@ -45,12 +45,17 @@ export default function ReviewPanel({ incident }: { incident: IncidentDetail }) 
     run("llm", async () => {
       const r = await draftWithLlm(incident.id, stage, lang);
       setSelectedId(r.id);
-      setMsg({ ok: true, text: r.source === "llm" ? `Drafted locally by ${r.model} (prompt ${r.prompt_version}). Review the amber fields.` : "Local model unavailable — template draft created instead. Review the amber fields." });
+      if (r.source === "llm") {
+        setMsg({ ok: true, text: `Drafted locally by ${r.model} (prompt ${r.prompt_version}). Review the amber TEXT fields, then approve.` });
+      } else {
+        const st = await draftStatus().catch(() => null);
+        setMsg({ ok: false, text: `The local model did not answer, so a template draft was created instead. ${st && !st.ready ? `Ollama: ${st.reason ?? "not ready"}.` : "Check the API logs for the model error."} You can still edit and approve the template.` });
+      }
     });
-  const draftTemplate = () => run("template", async () => { const r = await createTemplateDraft(incident.id, stage, lang); setSelectedId(r.id); }, "Template draft created (no model involved).");
-  const save = () => report && run("save", () => editReport(report.id, edits, "edited in review UI"), "Edits saved to the pending draft. Audit entry written.");
-  const approve = () => report && run("approve", () => approveReport(report.id, "approved in review UI"), "Approved. FACT fields re-verified against the database; audit entry written.");
-  const reject = () => report && run("reject", () => rejectReport(report.id, "rejected in review UI"), "Rejected. Draft a new version.");
+  const draftTemplate = () => run("template", async () => { const r = await createTemplateDraft(incident.id, stage, lang); setSelectedId(r.id); }, "Template draft created from database facts and standard wording. No model was used. Edit the amber TEXT fields, then approve.");
+  const save = () => report && run("save", () => editReport(report.id, edits, "edited in review UI"), "Edits saved to the pending draft and recorded in the audit log.");
+  const approve = () => report && run("approve", () => approveReport(report.id, "approved in review UI"), "Approved. FACT fields were re-verified against the database and the approval is in the audit log.");
+  const reject = () => report && run("reject", () => rejectReport(report.id, "rejected in review UI"), "Rejected. Draft a new version when ready.");
 
   const fields = STAGE_FIELDS[stage];
   const isFact = (k: string) => report?.fact_fields.includes(k) ?? false;
@@ -70,9 +75,9 @@ export default function ReviewPanel({ incident }: { incident: IncidentDetail }) 
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <button className={btnPrimary} onClick={draftLlm} disabled={!!busy}>
-            {busy === "llm" ? <><Spinner /> drafting locally — no data leaves this machine…</> : `Draft ${lang.toUpperCase()} with local LLM`}
+            {busy === "llm" ? <><Spinner /> Drafting locally · no data leaves this machine…</> : `Draft ${lang.toUpperCase()} with Local AI`}
           </button>
-          <button className={btnGhost} onClick={draftTemplate} disabled={!!busy}>{busy === "template" ? <Spinner /> : "Template draft (no LLM)"}</button>
+          <button className={btnGhost} onClick={draftTemplate} disabled={!!busy} title="Deterministic draft from database facts and standard wording; no model involved">{busy === "template" ? <Spinner /> : "Start from Template"}</button>
           {candidates.length > 1 && (
             <select className="ml-auto rounded border border-border bg-surface px-2 py-1 text-xs" value={report?.id ?? ""} onChange={(e) => { setSelectedId(e.target.value); setEdits({}); }}>
               {candidates.map((r) => <option key={r.id} value={r.id}>v{r.version} · {r.status} · {r.source}</option>)}
@@ -84,7 +89,7 @@ export default function ReviewPanel({ incident }: { incident: IncidentDetail }) 
 
       {!report && (
         <Card className="p-8 text-center text-sm text-muted">
-          No {STAGE_LABEL[stage]} draft in {lang.toUpperCase()} yet.
+          No {STAGE_LABEL[stage]} draft in {lang.toUpperCase()} yet. Use "Draft with Local AI" or "Start from Template".
           <div className="mt-3 text-xs text-faint">Drafts start as <span className="text-warn">pending_review</span>.</div>
         </Card>
       )}
@@ -127,12 +132,12 @@ export default function ReviewPanel({ incident }: { incident: IncidentDetail }) 
           <div className="mt-4 flex flex-wrap items-center gap-2">
             {editable && (
               <>
-                <button className={btnGhost} onClick={save} disabled={!dirty || !!busy}>{busy === "save" ? <Spinner /> : "Save edits"}</button>
+                <button className={btnGhost} onClick={save} disabled={!dirty || !!busy}>{busy === "save" ? <Spinner /> : "Save Edits"}</button>
                 <button className={btnSuccess} onClick={approve} disabled={dirty || !!busy} title={dirty ? "Save edits first" : "Approve this draft"}>{busy === "approve" ? <Spinner /> : "Approve"}</button>
                 <button className={btnDanger} onClick={reject} disabled={!!busy}>{busy === "reject" ? <Spinner /> : "Reject"}</button>
               </>
             )}
-            {report.status === "approved" && <a className={btnPrimary} href={packageUrl(incident.id)}>Download filing package (JSON + PDF)</a>}
+            {report.status === "approved" && <a className={btnPrimary} href={packageUrl(incident.id)}>Download Filing Package (JSON + PDF)</a>}
           </div>
         </Card>
       )}

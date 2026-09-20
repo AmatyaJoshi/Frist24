@@ -34,9 +34,9 @@ spreadsheet. The 24-hour clock does not wait for the spreadsheet.
    from the UI.
 7. **Filing package** export (zip: JSON + PDF per report in EN and DE, facts, KEV entry, audit trail).
    The human submits it on the ENISA platform.
-8. **Alerts**: optional webhook (`NOTIFY_WEBHOOK_URL`) fires one JSON summary per sync when incidents open, so
-   the right person is paged at 16:00 on a Friday. A read-only **Settings** page shows the running configuration,
-   feed status, model status and the egress allow-list.
+8. **Settings and alerts**: manufacturer identity, Member States, default reviewer and language, and an alert
+   webhook are editable in the UI (stored in the database, audited, effective immediately). One JSON summary per
+   sync goes to the webhook when incidents open. Infrastructure values stay in `.env`.
 
 No vulnerability data leaves the machine. Feed downloads are pulls of public data from an allow-list of hosts.
 
@@ -153,7 +153,7 @@ DECISIONS.md / TODO.md       non-obvious choices / cut scope
 `POST /sync`, `GET /sync/status` · `GET /incidents`, `GET /incidents/{id}`,
 `POST /incidents/{id}/reports/template`, `POST /incidents/{id}/fix-available`, `POST /incidents/{id}/close`,
 `GET /incidents/{id}/package` · `POST /draft/{stage}?incident_id&language`, `GET /draft/status` ·
-`GET/PATCH /reports/{id}`, `POST /reports/{id}/approve|reject` · `GET /audit`, `GET /audit/verify` · `GET /settings` · `GET /health`
+`GET/PATCH /reports/{id}`, `POST /reports/{id}/approve|reject` · `GET /audit`, `GET /audit/verify` · `GET/PUT /settings` · `GET /health`
 
 ## Data sources (all real, all public, all one-way)
 | Source | Used for | Refresh |
@@ -170,9 +170,10 @@ Outbound allow-list (logged at API start, asserted in code): `www.cisa.gov`, `ep
 - **Real:** KEV catalog (1,713 entries on 2026-09-18), EPSS scores, OSV matches (644 vulnerability records
   for 1,786 distinct PURLs), the SBOMs (unmodified public CycloneDX files), the LLM drafts.
 - **Simulated:** the manufacturer identity (`FRIST24_MANUFACTURER_NAME`), the claim that the five demo SKUs embed
-  those SBOMs (they are public SBOMs of Proton Mail's web client, Keycloak 10.0.2, Dropwizard 1.3.15, Proton Bridge
-  1.8.0 and OWASP Juice Shop, see `fixtures/README.md`), and the **workflow history**: `make demo` back-dates five
-  incidents to the day after their CVE entered KEV and approves template reports under demo reviewer names. Those
+  those SBOMs (26 SKUs in five product families share five public SBOMs: Proton Mail web client, Keycloak 10.0.2,
+  Dropwizard 1.3.15, Proton Bridge 1.8.0, OWASP Juice Shop; see `fixtures/README.md`), and the **workflow history**:
+  `make demo` stages ~55 incidents opened by the real rule into closed, final-approved, in-progress and
+  needs-action states, with template reports approved or rejected under demo reviewer names. Those
   rows are flagged `synthetic_history: true` in the audit log and carry actor `demo:history`. Disable with
   `DEMO_HISTORY=false` or `python -m app.cli demo --no-history`. The two live incidents are untouched.
 

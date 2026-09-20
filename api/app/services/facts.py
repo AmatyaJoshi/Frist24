@@ -5,7 +5,8 @@ from __future__ import annotations
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.config import get_settings
+from app.config import get_settings  # noqa: F401
+from app.services import app_settings
 from app.models import EpssScore, Incident, Product, Report, Vulnerability
 from app.schemas.reports import UNKNOWN
 from app.services.incidents import incident_components
@@ -26,7 +27,7 @@ def _best_vuln(db: Session, cve: str) -> Vulnerability | None:
 
 def build_facts(db: Session, inc: Incident, language: str = "en") -> dict:
     """Returns {"facts": {...FACT fields...}, "context": {...for the prompt only...}, "defaults": {...TEXT defaults...}}."""
-    s = get_settings()
+    s = app_settings.load(db)
     product: Product = inc.product
     kev = inc.kev
     pairs = incident_components(db, inc)
@@ -47,8 +48,8 @@ def build_facts(db: Session, inc: Incident, language: str = "en") -> dict:
     evidence = f"Listed in CISA KEV on {kev.date_added.isoformat()}; {kev.short_description or kev.vulnerability_name}"
 
     facts = {
-        "manufacturer_name": s.frist24_manufacturer_name,
-        "manufacturer_contact": s.frist24_manufacturer_contact,
+        "manufacturer_name": s.manufacturer_name,
+        "manufacturer_contact": s.manufacturer_contact,
         "product_name": product.name,
         "product_identifier": product.sku,
         "product_versions_affected": versions_affected,
@@ -81,8 +82,14 @@ def build_facts(db: Session, inc: Incident, language: str = "en") -> dict:
     else:
         facts["epss_score"] = "not available"
 
+    if s.member_states:
+        ms = ", ".join(s.member_states)
+        member_states_text = (f"Product is placed on the market in the following Member States: {ms}." if language == "en"
+                              else f"Das Produkt wird in folgenden Mitgliedstaaten in Verkehr gebracht: {ms}.")
+    else:
+        member_states_text = DEFAULT_MEMBER_STATES.get(language, DEFAULT_MEMBER_STATES["en"])
     defaults = {
-        "member_states_affected": DEFAULT_MEMBER_STATES.get(language, DEFAULT_MEMBER_STATES["en"]),
+        "member_states_affected": member_states_text,
         "unknown": unknown,
     }
 

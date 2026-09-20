@@ -46,8 +46,8 @@ const TONE_CLASS: Record<Tone, string> = {
 export function Badge({ value, tone, className = "" }: { value: string; tone?: Tone; className?: string }) {
   const t = tone ?? TONE[value] ?? "neutral";
   return (
-    <span className={`inline-flex items-center rounded-md border px-1.5 py-0.5 text-[11px] font-medium tracking-wide whitespace-nowrap ${TONE_CLASS[t]} ${className}`}>
-      {value.replace(/_/g, " ")}
+    <span className={`inline-flex items-center rounded-md border px-1.5 py-0.5 text-[11px] font-medium tracking-wide whitespace-nowrap capitalize ${TONE_CLASS[t]} ${className}`}>
+      {value.replace(/_/g, " ").replace(/\bllm\b/i, "AI").replace(/\bok\b/, "OK")}
     </span>
   );
 }

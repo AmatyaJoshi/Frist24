@@ -44,9 +44,9 @@ export default async function ProductPage({ params, searchParams }: { params: Pr
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 stagger">
         <Card className="p-4 text-sm space-y-2">
           <SectionTitle>Product</SectionTitle>
-          <Row k="Placed on market" v={formatDate(product.placed_on_market_at)} />
+          <Row k="Placed on Market" v={formatDate(product.placed_on_market_at)} />
           <Row k="Components" v={String(product.component_count)} />
-          <Row k="Open incidents" v={String(product.open_incidents)} accent={product.open_incidents > 0} />
+          <Row k="Open Incidents" v={String(product.open_incidents)} accent={product.open_incidents > 0} />
         </Card>
         <Card className="p-4 text-sm space-y-2">
           <SectionTitle>SBOMs</SectionTitle>
@@ -59,7 +59,7 @@ export default async function ProductPage({ params, searchParams }: { params: Pr
           ))}
         </Card>
         <Card className="p-4 text-sm space-y-2">
-          <SectionTitle>Incidents for this product</SectionTitle>
+          <SectionTitle>Incidents for This Product</SectionTitle>
           {mine.length === 0 && <div className="text-faint">none</div>}
           {mine.map((i) => (
             <Link key={i.id} href={`/incidents/${i.id}`} className="flex items-center justify-between gap-2 rounded-md px-2 py-1 hover:bg-surface-2">

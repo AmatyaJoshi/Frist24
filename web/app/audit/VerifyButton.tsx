@@ -29,7 +29,7 @@ export default function VerifyButton() {
         </span>
       )}
       {err && <span className="text-sm text-danger">{err}</span>}
-      <button className={btnPrimary} onClick={go} disabled={busy}>{busy ? <><Spinner /> verifying…</> : "Verify chain"}</button>
+      <button className={btnPrimary} onClick={go} disabled={busy}>{busy ? <><Spinner /> verifying…</> : "Verify Chain"}</button>
     </div>
   );
 }

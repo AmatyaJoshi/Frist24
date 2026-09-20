@@ -8,6 +8,7 @@ import type {
   Product,
   Report,
   Settings,
+  EditableSettings,
 } from "./types";
 
 // Server components call the API over the compose network (API_URL);
@@ -78,6 +79,7 @@ export const getIncidents = () => request<IncidentListItem[]>("/incidents");
 export const getIncident = (id: string) => request<IncidentDetail>(`/incidents/${id}`);
 export const createTemplateDraft = (incidentId: string, stage: string, language: string) =>
   request<Report>(`/incidents/${incidentId}/reports/template?stage=${stage}&language=${language}`, { method: "POST" });
+export const draftStatus = () => request<{ ready: boolean; models: string[]; model?: string; reason?: string }>("/draft/status");
 export const draftWithLlm = (incidentId: string, stage: string, language: string) =>
   request<Report>(`/draft/${stage}?incident_id=${incidentId}&language=${language}`, { method: "POST" });
 export const editReport = (id: string, content: Record<string, unknown>, note?: string) =>
@@ -89,10 +91,12 @@ export const rejectReport = (id: string, note?: string) =>
 
 // --- settings
 export const getSettings = () => request<Settings>("/settings");
+export const updateSettings = (body: Partial<EditableSettings>, actor?: string) =>
+  request<Settings>("/settings", { method: "PUT", body: JSON.stringify(body), headers: actor ? { "X-Actor": actor } : undefined });
 
 // --- audit
-export const getAudit = (limit = 200, offset = 0) =>
-  request<{ total: number; items: AuditEvent[] }>(`/audit?limit=${limit}&offset=${offset}`);
+export const getAudit = (limit = 200, offset = 0, action?: string) =>
+  request<{ total: number; items: AuditEvent[] }>(`/audit?limit=${limit}&offset=${offset}${action ? `&action=${encodeURIComponent(action)}` : ""}`);
 export const verifyAudit = () =>
   request<{ ok: boolean; rows: number; first_bad_id: number | null; reason: string | null; head?: string }>("/audit/verify");
 export const packageUrl = (incidentId: string) => `${API_URL}/incidents/${incidentId}/package`;

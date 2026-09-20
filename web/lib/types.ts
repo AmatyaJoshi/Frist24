@@ -233,13 +233,25 @@ export const STAGE_FIELDS: Record<Stage, readonly string[]> = {
 };
 
 export const STAGE_LABEL: Record<Stage, string> = {
-  early_warning: "Early warning (24h)",
-  notification: "Vulnerability notification (72h)",
-  final_report: "Final report (14d)",
+  early_warning: "Early Warning (24h)",
+  notification: "Vulnerability Notification (72h)",
+  final_report: "Final Report (14d)",
+};
+
+export type EditableSettings = {
+  manufacturer_name: string;
+  manufacturer_contact: string;
+  member_states: string[];
+  default_language: Language;
+  default_reviewer: string;
+  notify_webhook_url: string | null;
+  public_web_url: string;
 };
 
 export type Settings = {
   version: string;
+  editable: EditableSettings;
+  eu_member_states: Record<string, string>;
   manufacturer: { name: string; contact: string };
   llm: { url: string; model: string; fallback_model: string; ready: boolean; available_models: string[] };
   feeds: { kev_url: string; epss_csv_url: string; osv_api_url: string };

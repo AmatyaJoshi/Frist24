@@ -33,9 +33,9 @@ export default async function IncidentPage({ params }: { params: Promise<{ id: s
           <div className="mt-2 flex items-center gap-2"><Badge value={inc.status} /><span className="text-xs text-faint">aware_at {formatDateTime(inc.aware_at)}</span></div>
         </div>
         <Card className="grid w-full grid-cols-1 gap-4 p-4 text-center sm:grid-cols-3 sm:gap-6 xl:w-auto">
-          <Deadline label="Early warning · 24h" deadline={inc.deadline_early_warning} done={inc.status !== "open"} />
+          <Deadline label="Early Warning · 24h" deadline={inc.deadline_early_warning} done={inc.status !== "open"} />
           <Deadline label="Notification · 72h" deadline={inc.deadline_notification} done={["notification_approved", "final_approved", "closed"].includes(inc.status)} />
-          <Deadline label={`Final report · 14d${inc.final_report_anchor === "provisional" ? " (provisional)" : ""}`} deadline={inc.deadline_final_report} done={["final_approved", "closed"].includes(inc.status)} />
+          <Deadline label={`Final Report · 14d${inc.final_report_anchor === "provisional" ? " (provisional)" : ""}`} deadline={inc.deadline_final_report} done={["final_approved", "closed"].includes(inc.status)} />
         </Card>
       </div>
 
@@ -48,7 +48,7 @@ export default async function IncidentPage({ params }: { params: Promise<{ id: s
             <h2 className="text-xs uppercase tracking-wide text-faint">Product</h2>
             <div className="font-medium">{inc.product_name}</div>
             <div className="text-muted text-xs">{inc.product_description}</div>
-            <div className="flex gap-2 items-center text-xs"><Badge value={inc.lifecycle_status} /><span className="text-faint">{inc.component_count} matched component(s)</span></div>
+            <div className="flex gap-2 items-center text-xs"><Badge value={inc.lifecycle_status} /><span className="text-faint">{inc.component_count} Matched Component(s)</span></div>
           </Card>
           <Card className="p-4 space-y-2 text-sm">
             <h2 className="text-xs uppercase tracking-wide text-faint">CISA KEV entry <span className="text-ok/70 normal-case">· deterministic trigger</span></h2>
@@ -58,7 +58,7 @@ export default async function IncidentPage({ params }: { params: Promise<{ id: s
             <div className="text-xs text-faint">Ransomware use: {inc.kev.known_ransomware_campaign_use ?? "–"} · CWE {inc.kev.cwes?.join(", ") || "–"}</div>
           </Card>
           <Card className="p-4 space-y-2 text-sm">
-            <h2 className="text-xs uppercase tracking-wide text-faint">Scores (triage only)</h2>
+            <h2 className="text-xs uppercase tracking-wide text-faint">Scores (Triage Only)</h2>
             <div className="grid grid-cols-2 gap-2">
               <div><div className="text-faint text-xs">EPSS (30-day exploit probability)</div><div className="font-mono text-lg">{inc.epss != null ? inc.epss.toFixed(3) : "–"}</div></div>
               <div><div className="text-faint text-xs">CVSS base</div><div className="font-mono text-lg">{inc.cvss_score != null ? inc.cvss_score.toFixed(1) : "–"}</div></div>
@@ -106,7 +106,7 @@ function Deadline({ label, deadline, done }: { label: string; deadline: string; 
   return (
     <div>
       <div className="text-[11px] uppercase tracking-wide text-faint">{label}</div>
-      {done ? <div className="text-ok font-mono text-lg">done ✓</div> : <Countdown deadline={deadline} />}
+      {done ? <div className="text-ok font-mono text-lg">Done ✓</div> : <Countdown deadline={deadline} />}
       <div className="text-[11px] text-faint">{formatDateTime(deadline)}</div>
     </div>
   );

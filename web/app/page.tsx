@@ -10,8 +10,8 @@ export const dynamic = "force-dynamic";
 
 function nextAction(i: IncidentListItem): { label: string; tone: "danger" | "warn" | "info" } {
   if (!i.next_stage) return { label: "Resolved", tone: "info" };
-  if (i.reports_pending > 0) return { label: "Review & approve draft", tone: "warn" };
-  return { label: `Draft ${STAGE_LABEL[i.next_stage].split(" (")[0].toLowerCase()}`, tone: "danger" };
+  if (i.reports_pending > 0) return { label: "Review & Approve Draft", tone: "warn" };
+  return { label: `Draft ${STAGE_LABEL[i.next_stage].split(" (")[0]}`, tone: "danger" };
 }
 
 export default async function Home() {
@@ -34,7 +34,7 @@ export default async function Home() {
     <div className="space-y-6">
       <section className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight">Compliance overview</h1>
+          <h1 className="text-3xl font-semibold tracking-tight">Compliance Overview</h1>
           <p className="mt-1 text-sm text-muted">CRA Article 14. What needs your decision, and how long you have.</p>
         </div>
         <div className="flex items-center gap-2 text-xs text-faint">
@@ -45,16 +45,16 @@ export default async function Home() {
       </section>
 
       <section className="grid grid-cols-2 gap-3 md:grid-cols-4 stagger">
-        <Stat label="Needs your action" value={needsAction.length} sub="drafts to write or approve" href="/incidents" accent={needsAction.length > 0} />
-        <Stat label="Open incidents" value={open.length} sub={`${atRisk} product${atRisk === 1 ? "" : "s"} affected`} href="/incidents" />
+        <Stat label="Needs Your Action" value={needsAction.length} sub="Drafts to write or approve" href="/incidents" accent={needsAction.length > 0} />
+        <Stat label="Open Incidents" value={open.length} sub={`${atRisk} product${atRisk === 1 ? "" : "s"} affected`} href="/incidents" />
         <Stat label="Resolved" value={resolved} sub={since ? `since ${since.getFullYear()}` : "—"} href="/incidents" />
-        <Stat label="Products monitored" value={products.length} sub={`${products.reduce((a, p) => a + p.component_count, 0).toLocaleString()} components`} href="/products" />
+        <Stat label="Products Monitored" value={products.length} sub={`${products.reduce((a, p) => a + p.component_count, 0).toLocaleString()} components`} href="/products" />
       </section>
 
       <Card className="overflow-x-auto">
         <div className="flex items-center justify-between border-b border-border px-4 py-3">
-          <SectionTitle>Action queue · sorted by deadline</SectionTitle>
-          <Link href="/incidents" className="text-xs text-accent hover:underline">All incidents</Link>
+          <SectionTitle>Action Queue · Sorted by Deadline</SectionTitle>
+          <Link href="/incidents" className="text-xs text-accent hover:underline">All Incidents</Link>
         </div>
         {open.length === 0 ? (
           <div className="px-4 py-10 text-center text-sm text-muted">Nothing due. Feeds are checked every 15 minutes.</div>
@@ -89,9 +89,9 @@ export default async function Home() {
       </Card>
 
       <section className="grid grid-cols-1 gap-3 md:grid-cols-3 stagger text-sm">
-        <Pill n="1" t="Detected by rule" b="A component matches a CVE on CISA KEV. The incident and its 24h clock open automatically." />
-        <Pill n="2" t="Drafted locally" b="The local model fills the amber text fields. Green facts come from your database." />
-        <Pill n="3" t="Approved by you" b="Review, approve, export the filing package. Every step is in the audit log." />
+        <Pill n="1" t="Detected by Rule" b="A component matches a CVE on CISA KEV. The incident and its 24h clock open automatically." />
+        <Pill n="2" t="Drafted Locally" b="The local model fills the amber text fields. Green facts come from your database." />
+        <Pill n="3" t="Approved by You" b="Review, approve, export the filing package. Every step is in the audit log." />
       </section>
     </div>
   );

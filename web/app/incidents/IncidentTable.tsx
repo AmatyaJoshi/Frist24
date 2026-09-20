@@ -29,21 +29,21 @@ export default function IncidentTable({ rows }: { rows: IncidentListItem[] }) {
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap items-center gap-2">
-        <input className={`${input} max-w-xs`} placeholder="Search SKU, product, CVE…" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Search incidents" />
+        <input className={`${input} max-w-xs`} placeholder="Search SKU, Product, CVE…" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Search incidents" />
         <div className="flex flex-wrap gap-1 text-xs">
           {STATUSES.map((s) => (
             <button
               key={s}
               onClick={() => setStatus(s)}
-              className={`rounded-md border px-2 py-1 transition-colors ${status === s ? "border-border-strong bg-surface-3 text-fg" : "border-border bg-surface text-muted hover:text-fg"}`}
+              className={`rounded-md border px-2 py-1 uppercase tracking-wide transition-colors ${status === s ? "border-border-strong bg-surface-3 text-fg" : "border-border bg-surface text-muted hover:text-fg"}`}
             >
-              {s === "all" ? "All" : s.replace(/_/g, " ")}
+              {s === "all" ? "ALL" : s.replace(/_/g, " ")}
             </button>
           ))}
         </div>
         {doneCount > 0 && status === "all" && (
           <label className="ml-auto flex items-center gap-2 text-xs text-muted">
-            <input type="checkbox" checked={showDone} onChange={(e) => setShowDone(e.target.checked)} /> show {doneCount} completed
+            <input type="checkbox" checked={showDone} onChange={(e) => setShowDone(e.target.checked)} /> Show {doneCount} Completed
           </label>
         )}
       </div>
@@ -55,10 +55,10 @@ export default function IncidentTable({ rows }: { rows: IncidentListItem[] }) {
           <table className="w-full text-sm">
             <thead className="text-left text-[11px] uppercase">
               <tr>
-                <th className="px-4 py-2.5">Next deadline</th>
+                <th className="px-4 py-2.5">Next Deadline</th>
                 <th className="px-4 py-2.5">Product</th>
                 <th className="px-4 py-2.5">CVE</th>
-                <th className="px-4 py-2.5">KEV since</th>
+                <th className="px-4 py-2.5">KEV Since</th>
                 <th className="px-4 py-2.5 text-right">EPSS</th>
                 <th className="px-4 py-2.5 text-right">CVSS</th>
                 <th className="px-4 py-2.5 text-right">Components</th>
@@ -72,7 +72,7 @@ export default function IncidentTable({ rows }: { rows: IncidentListItem[] }) {
                   <td className="px-4 py-3">
                     <Link href={`/incidents/${i.id}`} className="block">
                       <Countdown deadline={i.next_deadline} />
-                      <div className="text-xs text-faint">{i.next_stage ? STAGE_LABEL[i.next_stage] : "no open deadline"}</div>
+                      <div className="text-xs text-faint">{i.next_stage ? STAGE_LABEL[i.next_stage] : "No open deadline"}</div>
                     </Link>
                   </td>
                   <td className="px-4 py-3">
@@ -85,15 +85,15 @@ export default function IncidentTable({ rows }: { rows: IncidentListItem[] }) {
                   </td>
                   <td className="px-4 py-3 text-muted">
                     {formatDate(i.kev_date_added)}
-                    {i.known_ransomware_campaign_use === "Known" && <div className="text-[11px] text-danger">ransomware use known</div>}
+                    {i.known_ransomware_campaign_use === "Known" && <div className="text-[11px] text-danger">Ransomware use known</div>}
                   </td>
                   <td className="px-4 py-3 text-right tabular-nums">{i.epss != null ? i.epss.toFixed(3) : "–"}</td>
                   <td className="px-4 py-3 text-right tabular-nums">{i.cvss_score != null ? i.cvss_score.toFixed(1) : "–"}</td>
                   <td className="px-4 py-3 text-right tabular-nums">{i.component_count}</td>
                   <td className="px-4 py-3"><Badge value={i.status} /></td>
                   <td className="px-4 py-3 text-xs">
-                    {i.reports_pending > 0 && <div className="text-warn">{i.reports_pending} pending review</div>}
-                    {i.reports_approved > 0 && <div className="text-ok">{i.reports_approved} approved</div>}
+                    {i.reports_pending > 0 && <div className="text-warn">{i.reports_pending} Pending Review</div>}
+                    {i.reports_approved > 0 && <div className="text-ok">{i.reports_approved} Approved</div>}
                     {i.reports_pending + i.reports_approved === 0 && <span className="text-faint">none</span>}
                   </td>
                 </tr>

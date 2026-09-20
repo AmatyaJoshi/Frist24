@@ -15,14 +15,14 @@ const ICON: Record<string, string> = {
 export default function Timeline({ events }: { events: AuditEvent[] }) {
   return (
     <Card className="p-4">
-      <h2 className="text-xs uppercase tracking-wide text-faint mb-3">Timeline · hash-chained audit log</h2>
+      <h2 className="text-xs uppercase tracking-wide text-faint mb-3">Timeline · Hash-Chained Audit Log</h2>
       {events.length === 0 && <div className="text-sm text-faint">No events yet.</div>}
       <ol className="space-y-3">
         {[...events].reverse().map((e) => (
           <li key={e.id} className="text-sm border-l border-border pl-3 relative">
             <span className="absolute -left-[9px] top-0.5 h-4 w-4 rounded-full bg-bg border border-border text-[10px] flex items-center justify-center">{ICON[e.action] ?? "•"}</span>
             <div className="flex justify-between gap-2">
-              <span className="font-medium">{e.action}</span>
+              <span className="font-medium capitalize">{e.action.replace(".", " · ").replace(/_/g, " ")}</span>
               <span className="text-xs text-faint whitespace-nowrap">{formatDateTime(e.ts)}</span>
             </div>
             <div className="text-xs text-muted">by {e.actor}{summary(e)}</div>
