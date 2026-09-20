@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import Countdown from "@/components/Countdown";
+import Pager from "@/components/Pager";
 import { Badge, Card, Empty, input } from "@/components/ui";
 import { formatDate } from "@/lib/time";
 import { STAGE_LABEL, type IncidentListItem, type IncidentStatus } from "@/lib/types";
@@ -13,6 +14,8 @@ export default function IncidentTable({ rows }: { rows: IncidentListItem[] }) {
   const [q, setQ] = useState("");
   const [status, setStatus] = useState<(typeof STATUSES)[number]>("all");
   const [showDone, setShowDone] = useState(false);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(25);
 
   const filtered = useMemo(() => {
     const needle = q.trim().toLowerCase();
@@ -25,16 +28,19 @@ export default function IncidentTable({ rows }: { rows: IncidentListItem[] }) {
   }, [rows, q, status, showDone]);
 
   const doneCount = rows.filter((i) => !i.next_deadline).length;
+  const pages = Math.max(1, Math.ceil(filtered.length / pageSize));
+  const current = Math.min(page, pages);
+  const slice = filtered.slice((current - 1) * pageSize, current * pageSize);
 
   return (
     <div className="space-y-3">
       <div className="flex flex-wrap items-center gap-2">
-        <input className={`${input} max-w-xs`} placeholder="Search SKU, Product, CVE…" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Search incidents" />
+        <input className={`${input} max-w-xs`} placeholder="Search SKU, Product, CVE…" value={q} onChange={(e) => { setQ(e.target.value); setPage(1); }} aria-label="Search incidents" />
         <div className="flex flex-wrap gap-1 text-xs">
           {STATUSES.map((s) => (
             <button
               key={s}
-              onClick={() => setStatus(s)}
+              onClick={() => { setStatus(s); setPage(1); }}
               className={`rounded-md border px-2 py-1 uppercase tracking-wide transition-colors ${status === s ? "border-border-strong bg-surface-3 text-fg" : "border-border bg-surface text-muted hover:text-fg"}`}
             >
               {s === "all" ? "ALL" : s.replace(/_/g, " ")}
@@ -43,7 +49,7 @@ export default function IncidentTable({ rows }: { rows: IncidentListItem[] }) {
         </div>
         {doneCount > 0 && status === "all" && (
           <label className="ml-auto flex items-center gap-2 text-xs text-muted">
-            <input type="checkbox" checked={showDone} onChange={(e) => setShowDone(e.target.checked)} /> Show {doneCount} Completed
+            <input type="checkbox" checked={showDone} onChange={(e) => { setShowDone(e.target.checked); setPage(1); }} /> Show {doneCount} Completed
           </label>
         )}
       </div>
@@ -67,7 +73,7 @@ export default function IncidentTable({ rows }: { rows: IncidentListItem[] }) {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((i) => (
+              {slice.map((i) => (
                 <tr key={i.id} className="border-t border-border hover:bg-surface-2">
                   <td className="px-4 py-3">
                     <Link href={`/incidents/${i.id}`} className="block">
@@ -100,6 +106,9 @@ export default function IncidentTable({ rows }: { rows: IncidentListItem[] }) {
               ))}
             </tbody>
           </table>
+          <div className="border-t border-border">
+            <Pager page={current} pageSize={pageSize} total={filtered.length} onPage={setPage} onPageSize={(n) => { setPageSize(n); setPage(1); }} />
+          </div>
         </Card>
       )}
     </div>
